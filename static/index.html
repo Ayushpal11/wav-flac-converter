@@ -4,12 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WAV to FLAC Converter</title>
+    <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e1e2f 0%, #2d2b42 100%);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        input[type="file"] {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        input[type="file"]:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        button {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+        #downloadLink {
+            margin-top: 20px;
+        }
+        a {
+            color: #fff;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
 </head>
 <body>
     <h1>WAV to FLAC Audio Converter</h1>
     <input type="file" id="wavFileInput" accept=".wav" />
     <button onclick="convertToFLAC()">Convert to FLAC</button>
-    <div id="downloadLink" style="margin-top: 20px;"></div>
+    <div id="downloadLink"></div>
 
     <script>
         async function convertToFLAC() {
