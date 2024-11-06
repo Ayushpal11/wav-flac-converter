@@ -10,7 +10,6 @@ This is a Go-based backend service that takes WAV audio files, converts them to 
 - [Usage](#usage)
 - [API Endpoints](#api-endpoints)
 - [Docker Setup](#docker-setup)
-- [Testing](#testing)
 - [Troubleshooting](#troubleshooting)
 
 ## Features
@@ -44,10 +43,6 @@ This is a Go-based backend service that takes WAV audio files, converts them to 
 ## Docker Setup
 1. Build the Docker image using `docker build -t wav-flac-converter .`
 2. Run the Docker container using `docker run -p 8080:8080 wav-flac-converter`
-
-## Testing
-1. Run `go test ./...` to run all tests
-2. Run `go test -cover ./...` to run all tests with coverage
 
 ## Troubleshooting
 - If you encounter any issues with the audio conversion, make sure FFmpeg is installed and accessible in your PATH.
