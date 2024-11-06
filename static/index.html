@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAV to FLAC Converter</title>
+</head>
+<body>
+    <h1>WAV to FLAC Audio Converter</h1>
+    <input type="file" id="wavFileInput" accept=".wav" />
+    <button onclick="convertToFLAC()">Convert to FLAC</button>
+    <div id="downloadLink" style="margin-top: 20px;"></div>
+
+    <script>
+        async function convertToFLAC() {
+            const fileInput = document.getElementById("wavFileInput");
+            if (!fileInput.files.length) {
+                alert("Please select a WAV file to convert.");
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const ws = new WebSocket("ws://localhost:8080/ws");
+            ws.binaryType = "arraybuffer";
+
+            ws.onopen = () => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const wavData = event.target.result;
+                    ws.send(wavData);
+                };
+                reader.readAsArrayBuffer(file);
+            };
+
+            ws.onmessage = (event) => {
+                const flacBlob = new Blob([event.data], { type: "audio/flac" });
+                const downloadUrl = URL.createObjectURL(flacBlob);
+
+                const downloadLink = document.getElementById("downloadLink");
+                downloadLink.innerHTML = `<a href="${downloadUrl}" download="output.flac">Download FLAC file</a>`;
+                ws.close();
+            };
+
+            ws.onerror = (error) => {
+                console.error("WebSocket error:", error);
+                alert("An error occurred during the conversion process.");
+                ws.close();
+            };
+        }
+    </script>
+</body>
+</html>

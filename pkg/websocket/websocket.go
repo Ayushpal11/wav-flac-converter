@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/ayushpal11/wav-flac-converter/internal/converter"
+	"github.com/ayushpal11/wav-flac-converter/pkg/ffmpeg"
 	"github.com/gorilla/websocket"
 )
 
@@ -14,31 +14,25 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
+func HandleConnection(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Println("Failed to upgrade connection:", err)
+		log.Println("Failed to set websocket upgrade:", err)
 		return
 	}
 	defer conn.Close()
 
-	for {
-		_, audioData, err := conn.ReadMessage()
-		if err != nil {
-			log.Println("Error reading message:", err)
-			break
-		}
-
-		flacData, err := converter.ConvertToFLAC(audioData)
-		if err != nil {
-			log.Println("Conversion error:", err)
-			conn.WriteMessage(websocket.TextMessage, []byte("Conversion failed"))
-			continue
-		}
-
-		if err := conn.WriteMessage(websocket.BinaryMessage, flacData); err != nil {
-			log.Println("Error sending message:", err)
-			break
-		}
+	_, wavData, err := conn.ReadMessage()
+	if err != nil {
+		log.Println("Error reading WAV data:", err)
+		return
 	}
+
+	flacData, err := ffmpeg.ConvertToFLAC(wavData)
+	if err != nil {
+		log.Println("Error converting to FLAC:", err)
+		return
+	}
+
+	conn.WriteMessage(websocket.BinaryMessage, flacData)
 }

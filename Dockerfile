@@ -1,14 +1,12 @@
-FROM golang:1.20-alpine
+# Dockerfile
+FROM golang:1.20
+
+
+RUN apt-get update && apt-get install -y ffmpeg
+
 
 WORKDIR /app
-
-COPY go.mod go.sum ./
-RUN go mod download
-
 COPY . .
 
-RUN go build -o wav-flac-converter ./cmd
-
-EXPOSE 8080
-
-CMD ["./wav-flac-converter"]
+RUN go build -o main .
+CMD ["./main"]
